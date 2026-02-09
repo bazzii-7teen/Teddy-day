@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Teddy Day 🧸 For Sabaina</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #8B4513 0%, #D2691E 25%, #F4A460 50%, #DEB887 75%, #F5DEB3 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            min-height: 100vh;
+            overflow: hidden;
+            color: #5D4037;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .page {
+            display: none;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 20px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .floating-teddies {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .teddy {
+            position: absolute;
+            font-size: 30px;
+            opacity: 0.4;
+            animation: float 8s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.4; }
+            90% { opacity: 0.4; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+
+        .music-control {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(255,255,255,0.9);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .music-control.playing {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(210, 105, 30, 0.7); }
+            50% { box-shadow: 0 0 0 10px rgba(210, 105, 30, 0); }
+        }
+
+        .page-indicator {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.3);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 30px;
+            margin: 15px 0;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #8B4513;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: white;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .subtitle {
+            color: #A0522D;
+            text-align: center;
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #D2691E, #8B4513);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(139, 69, 19, 0.4);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            margin: 10px;
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: rgba(255,255,255,0.9);
+            color: #8B4513;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .center-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+        }
+
+        .teddy-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .special-teddy {
+            border: 3px solid #D2691E;
+            text-align: center;
+        }
+
+        .special-teddy::before {
+            content: '⭐ BEST TEDDY ⭐';
+            display: block;
+            background: #D2691E;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            width: fit-content;
+            margin: -10px auto 15px;
+        }
+
+        .special-img {
+            width: 100%;
+            max-width: 280px;
+            height: auto;
+            border-radius: 15px;
+            margin: 10px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .teddy-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .teddy-card {
+            background: rgba(255,255,255,0.9);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .teddy-card img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+        }
+
+        .teddy-info {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .teddy-info h3 {
+            font-size: 0.95rem;
+            color: #8B4513;
+            margin-bottom: 5px;
+        }
+
+        .teddy-info p {
+            font-size: 0.8rem;
+            color: #A0522D;
+        }
+
+        .music-hint {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: rgba(255,255,255,0.9);
+            padding: 10px 15px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: #8B4513;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+        }
+
+        .music-hint.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Music -->
+    <audio id="bgMusic" loop>
+        <source src="https://files.catbox.moe/sxa5zt.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Music Control -->
+    <div class="music-control" id="musicBtn" onclick="toggleMusic()">🔇</div>
+    
+    <!-- Music Hint -->
+    <div class="music-hint" id="musicHint">🎵 Music playing!</div>
+
+    <!-- Floating Teddies -->
+    <div class="floating-teddies" id="teddies"></div>
+
+    <!-- PAGE 1: HOME -->
+    <div class="page active" id="page1">
+        <div class="center-content">
+            <div class="glass-card" style="text-align: center; max-width: 400px;">
+                <div class="teddy-icon">🧸</div>
+                <h1>Teddy Day</h1>
+                <p class="subtitle">I made something soft for you, Sabaina 🤎</p>
+                <button class="btn" onclick="startExperience()">Tap to Open 🎁</button>
+            </div>
+            <p style="color: rgba(139, 69, 19, 0.8); margin-top: 30px; font-style: italic;">From Bazzi</p>
+        </div>
+    </div>
+
+    <!-- PAGE 2: GALLERY -->
+    <div class="page" id="page2">
+        <h2>My Teddies 🧸</h2>
+        
+        <!-- Her Drawing - SPECIAL -->
+        <div class="glass-card special-teddy">
+            <img src="https://i.postimg.cc/7LQNTL6L/IMG-20260208-132939-0461.jpg" alt="Sabaina's Drawing" class="special-img">
+            <p style="font-size: 1.1rem; color: #8B4513; font-weight: 600; margin-top: 10px;">This is the best teddy for me always 🥹🫶🏻</p>
+            <p style="font-size: 0.9rem; color: #A0522D; margin-top: 5px;">You drew this for me, and it's my favorite thing</p>
+        </div>
+
+        <!-- Other Teddies - YOUR PHOTOS -->
+        <div class="teddy-grid">
+            <div class="teddy-card">
+                <img src="https://i.postimg.cc/907FNKmc/3023db2689217032d344ef2f13beb2a5.jpg" alt="Teddy">
+                <div class="teddy-info">
+                    <h3>The Hugger</h3>
+                    <p>Gives best hugs</p>
+                </div>
+            </div>
+            <div class="teddy-card">
+                <img src="https://i.postimg.cc/fLFRCDNw/e7a01f1dedc4b992c80a3765640780d0.jpg" alt="Teddy">
+                <div class="teddy-info">
+                    <h3>The Listener</h3>
+                    <p>Hears everything</p>
+                </div>
+            </div>
+            <div class="teddy-card">
+                <img src="https://i.postimg.cc/FRqHpNQV/25c22ea0ae14fa5258a9b66a389736a0.jpg" alt="Teddy">
+                <div class="teddy-info">
+                    <h3>The Protector</h3>
+                    <p>Never lets go</p>
+                </div>
+            </div>
+            <div class="teddy-card">
+                <img src="https://i.postimg.cc/3wtRy2f4/3532807487bc8ba2a92ad8a7239957ad.jpg" alt="Teddy">
+                <div class="teddy-info">
+                    <h3>The Warmth</h3>
+                    <p>Like your heart</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="nav-btn" onclick="goToPage(1)">⬅️ Back</button>
+            <button class="nav-btn" onclick="goToPage(3)">Next ➡️</button>
+        </div>
+    </div>
+    <!-- PAGE 3: MESSAGE -->
+    <div class="page" id="page3">
+        <h2>A Note For You 💌</h2>
+        
+        <div class="glass-card" style="padding: 35px; line-height: 2;">
+            <div style="text-align: center; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 2px solid rgba(139, 69, 19, 0.2);">
+                <span style="font-size: 2.5rem;">🧸</span>
+                <p style="color: #8B4513; font-weight: 600; margin-top: 10px; font-size: 1.2rem;">Hi baby</p>
+            </div>
+            
+            <p style="margin-bottom: 15px; color: #5D4037;">Happy Teddy Day.</p>
+            
+            <p style="margin-bottom: 15px; color: #5D4037;">I really wish I could give you a real teddy today. I can't right now, but Inshallah one day I will — and we'll celebrate it properly together.</p>
+            
+            <p style="margin-bottom: 15px; color: #5D4037;">I don't say emotional stuff much, but you should know you matter to me. I think about you more than I show.</p>
+            
+            <p style="margin-bottom: 15px; color: #5D4037;">You're my comfort, honestly.</p>
+            
+            <p style="margin-bottom: 15px; color: #5D4037;">Just being you makes things feel better.</p>
+            
+            <p style="margin-bottom: 15px; color: #5D4037;">Save me a hug. I'll take it someday.</p>
+            
+            <div style="text-align: right; margin-top: 30px; color: #8B4513; font-weight: 600; font-size: 1.1rem;">
+                — Bazzi 🤎
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="nav-btn" onclick="goToPage(2)">⬅️ Back</button>
+            <button class="nav-btn" onclick="goToPage(4)">Next ➡️</button>
+        </div>
+    </div>
+
+    <!-- PAGE 4: DRAWING (PERFECT VERSION) -->
+    <div class="page" id="page4">
+        <h2>Draw a Teddy for Me? 🎨</h2>
+        
+        <div class="glass-card" style="text-align: center; padding: 20px;">
+            <p style="color: #8B4513; margin-bottom: 15px; font-size: 1.05rem;">Can you draw a teddy bear for me? I'd love to keep it 🥹</p>
+            
+            <!-- Perfect Drawing Canvas -->
+            <div id="canvasContainer" style="background: white; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); display: inline-block; max-width: 100%; position: relative; touch-action: none;">
+                <canvas id="drawCanvas" style="display: block; border-radius: 10px; cursor: crosshair; background: white;"></canvas>
+            </div>
+            
+            <!-- All Colors -->
+            <div style="margin: 20px 0; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
+                <button onclick="setColor('#000000')" style="width: 35px; height: 35px; border-radius: 50%; border: 3px solid #ddd; background: #000000; cursor: pointer;"></button>
+                <button onclick="setColor('#8B4513')" style="width: 35px; height: 35px; border-radius: 50%; border: 3px solid #ddd; background: #8B4513; cursor: pointer;"></button>
+                <button onclick="setColor('#D2691E')" style="width: 35px; height: 35px; border-radius: 50%; border: 3px solid #ddd; background: #D2691E; cursor: pointer;"></button>
+                <button onclick="setColor('#F4A460')" style="width: 35px; height: 35px; border-radius: 50%; border: 3px solid #ddd; background: #F4A460; cursor: pointer;"></button>
+                <button onclick="setColor('#FFD700')" style="width: 35px; height: 35px; border-radius: 50%; border: 3px solid #ddd; background: #FFD700; cursor: pointer;"></button>
+                <button onclick="setColor('#FF6B9D')" style="width: 35px; height: 35px; border-radius: 50%; border: 3px solid #ddd; background: #FF6B9D; cursor: pointer;"></button>
+                <button onclick="setColor('#FF0000')" style="width: 35px; height: 35px; border-radius: 50%; border: 3px solid #ddd; background: #FF0000; cursor: pointer;"></button>
+                <button onclick="setColor('#4CAF50')" style="width: 35px; height: 35px; border-radius: 50%; border: 3px solid #ddd; background: #4CAF50; cursor: pointer;"></button>
+                <button onclick="setColor('#2196F3')" style="width: 35px; height: 35px; border-radius: 50%; border: 3px solid #ddd; background: #2196F3; cursor: pointer;"></button>
+                <button onclick="setColor('#9C27B0')" style="width: 35px; height: 35px; border-radius: 50%; border: 3px solid #ddd; background: #9C27B0; cursor: pointer;"></button>
+                <button onclick="setColor('#FFFFFF')" style="width: 35px; height: 35px; border-radius: 50%; border: 3px solid #ddd; background: #FFFFFF; cursor: pointer;"></button>
+            </div>
+            
+            <!-- Brush Size -->
+            <div style="margin: 15px 0;">
+                <label style="color: #8B4513; font-size: 0.9rem; font-weight: 600;">Size:</label>
+                <input type="range" id="brushSize" min="1" max="30" value="3" style="width: 150px; margin: 0 10px; vertical-align: middle;">
+                <span id="sizeValue" style="color: #8B4513; font-weight: 600;">3</span>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div style="display: flex; justify-content: center; gap: 15px; margin-top: 15px; flex-wrap: wrap;">
+                <button onclick="clearCanvas()" style="background: #f44336; color: white; border: none; padding: 12px 25px; border-radius: 25px; cursor: pointer; font-weight: 600;">🗑️ Clear</button>
+                <button onclick="saveDrawing()" style="background: #4CAF50; color: white; border: none; padding: 12px 25px; border-radius: 25px; cursor: pointer; font-weight: 600;">💾 Save</button>
+            </div>
+            
+            <p id="saveMsg" style="color: #4CAF50; margin-top: 15px; font-size: 0.95rem; opacity: 0; transition: opacity 0.5s; font-weight: 600;">Saved! Send it to me 🥹</p>
+        </div>
+        
+        <!-- SKIP OPTION -->
+        <div style="text-align: center; margin-top: 20px;">
+            <p style="color: rgba(255,255,255,0.9); font-size: 0.85rem; margin-bottom: 10px;">Don't want to draw?</p>
+            <button onclick="goToPage(5)" style="background: rgba(255,255,255,0.25); color: white; border: 2px solid rgba(255,255,255,0.5); padding: 12px 30px; border-radius: 25px; cursor: pointer; font-weight: 600;">Skip ⏭️</button>
+        </div>
+
+        <div class="nav-buttons" style="margin-top: 15px;">
+            <button class="nav-btn" onclick="goToPage(3)">⬅️ Back</button>
+            <button class="nav-btn" onclick="goToPage(5)">Next ➡️</button>
+        </div>
+    </div>
+
+    <!-- PAGE 5: FINAL -->
+    <div class="page" id="page5">
+        <div class="center-content">
+            <div class="glass-card" style="text-align: center; max-width: 400px; padding: 45px;">
+                <span style="font-size: 4rem; display: block; margin-bottom: 20px;">💝</span>
+                <h1 style="font-size: 1.9rem; margin-bottom: 20px;">Happy Teddy Day</h1>
+                <p style="color: #8B4513; font-size: 1.15rem; line-height: 1.8; margin-bottom: 25px;">
+                    This is small<br>
+                    but it's from me<br>
+                    <span style="font-weight: 600;">And I mean every bit of it</span>
+                </p>
+                <p style="color: #A0522D; font-size: 1rem; margin-bottom: 30px; font-style: italic;">
+                    P.S. - Text me when you see this<br>
+                    I want to know if you smiled
+                </p>
+                <div style="padding-top: 25px; border-top: 2px solid rgba(139, 69, 19, 0.15);">
+                    <p style="color: #8B4513; font-weight: 600; font-size: 1.25rem;">From Bazzi 🤎</p>
+                </div>
+            </div>
+            
+            <button class="btn" onclick="goToPage(1)" style="margin-top: 35px;">Watch Again 🔄</button>
+        </div>
+    </div>
+
+    <!-- Page Indicator -->
+    <div class="page-indicator" id="pageIndicator">Page 1 of 5</div>
+
+    <script>
+        // Music Control
+        const music = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicBtn');
+        const musicHint = document.getElementById('musicHint');
+        let isPlaying = false;
+
+        function toggleMusic() {
+            if (isPlaying) {
+                music.pause();
+                musicBtn.textContent = '🔇';
+                musicBtn.classList.remove('playing');
+            } else {
+                music.play();
+                musicBtn.textContent = '🎵';
+                musicBtn.classList.add('playing');
+                musicHint.classList.add('show');
+                setTimeout(() => musicHint.classList.remove('show'), 3000);
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // Start Experience
+        function startExperience() {
+            music.play().then(() => {
+                isPlaying = true;
+                musicBtn.textContent = '🎵';
+                musicBtn.classList.add('playing');
+                musicHint.classList.add('show');
+                setTimeout(() => musicHint.classList.remove('show'), 3000);
+            }).catch(e => {
+                console.log('Music blocked');
+            });
+            goToPage(2);
+        }
+
+        // Page Navigation
+        function goToPage(pageNum) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById('page' + pageNum).classList.add('active');
+            document.getElementById('pageIndicator').textContent = 'Page ' + pageNum + ' of 5';
+            
+            // Setup canvas when page 4 is shown
+            if (pageNum === 4) {
+                setTimeout(setupCanvas, 100);
+            }
+        }
+
+        // Floating Teddies
+        function createTeddies() {
+            const container = document.getElementById('teddies');
+            const teddies = ['🧸', '🐻', '🤎', '✨', '🎀'];
+            for (let i = 0; i < 15; i++) {
+                const teddy = document.createElement('div');
+                teddy.className = 'teddy';
+                teddy.textContent = teddies[Math.floor(Math.random() * teddies.length)];
+                teddy.style.left = Math.random() * 100 + '%';
+                teddy.style.animationDuration = (Math.random() * 4 + 6) + 's';
+                teddy.style.animationDelay = Math.random() * 5 + 's';
+                teddy.style.fontSize = (Math.random() * 20 + 20) + 'px';
+                container.appendChild(teddy);
+            }
+        }
+
+        // ==================== PERFECT DRAWING APP ====================
+        const canvas = document.getElementById('drawCanvas');
+        const ctx = canvas.getContext('2d');
+        let isDrawing = false;
+        let currentColor = '#8B4513';
+        let currentSize = 3;
+        let lastX = 0;
+        let lastY = 0;
+
+        // Setup canvas with correct size
+        function setupCanvas() {
+            const container = document.getElementById('canvasContainer');
+            const rect = container.getBoundingClientRect();
+            
+            // Set canvas size (max 350x450, but responsive)
+            const width = Math.min(350, window.innerWidth - 60);
+            const height = Math.min(450, window.innerHeight - 300);
+            
+            canvas.width = width;
+            canvas.height = height;
+            canvas.style.width = width + 'px';
+            canvas.style.height = height + 'px';
+            
+            // Fill white background
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Set drawing style
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.strokeStyle = currentColor;
+            ctx.lineWidth = currentSize;
+        }
+
+        // Get correct coordinates
+        function getCoords(e) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            
+            let clientX, clientY;
+            
+            if (e.touches && e.touches.length > 0) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+            
+            return {
+                x: (clientX - rect.left) * scaleX,
+                y: (clientY - rect.top) * scaleY
+            };
+        }
+
+        // Start drawing
+        function startDrawing(e) {
+            e.preventDefault();
+            isDrawing = true;
+            const coords = getCoords(e);
+            lastX = coords.x;
+            lastY = coords.y;
+            
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+        }
+
+        // Draw
+        function draw(e) {
+            if (!isDrawing) return;
+            e.preventDefault();
+            
+            const coords = getCoords(e);
+            
+            ctx.strokeStyle = currentColor;
+            ctx.lineWidth = currentSize;
+            
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(coords.x, coords.y);
+            ctx.stroke();
+            
+            lastX = coords.x;
+            lastY = coords.y;
+        }
+
+        // Stop drawing
+        function stopDrawing() {
+            isDrawing = false;
+            ctx.beginPath();
+        }
+
+        // Event listeners
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+
+        canvas.addEventListener('touchstart', startDrawing, {passive: false});
+        canvas.addEventListener('touchmove', draw, {passive: false});
+        canvas.addEventListener('touchend', stopDrawing);
+
+        // Color picker
+        function setColor(color) {
+            currentColor = color;
+        }
+
+        // Brush size
+        document.getElementById('brushSize').addEventListener('input', function() {
+            currentSize = parseInt(this.value);
+            document.getElementById('sizeValue').textContent = currentSize;
+        });
+
+        // Clear canvas
+        function clearCanvas() {
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // Save drawing
+        function saveDrawing() {
+            const link = document.createElement('a');
+            link.download = 'teddy-for-bazzi.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            
+            document.getElementById('saveMsg').style.opacity = '1';
+            setTimeout(() => {
+                document.getElementById('saveMsg').style.opacity = '0';
+            }, 3000);
+        }
+
+        // Initialize
+        createTeddies();
+    </script>
+</body>
+</html>
